@@ -6,29 +6,35 @@ const divs = document.getElementsByClassName("boundary");
 var score = 0;
 var start = document.getElementById("start");
 var end = document.getElementById("end");
+var gameBoundaries = document.getElementById("game");
 var restart;
 
 
-start.addEventListener("click", game);
+start.addEventListener("click", startGame);
 
-function game() {
+function startGame() {
   for(i=0;i<5;i++){
     divs[i].classList.remove("youlose");;
   }
   document.getElementById("status").innerText = "Your score is \""+ score +"\" ";
 
   for(i=0;i<5;i++){
-    divs[i].addEventListener("mouseover",looseMouseOver,false);
+    divs[i].addEventListener("mouseover",looseMouseOver);
   }
+
 end.addEventListener("mouseover", wonFunction);
+gameBoundaries.addEventListener("mouseleave",cheatingDetected)
 }
 
 function looseMouseOver() {
   for(i=0;i<5;i++){
     divs[i].classList.add("youlose");
   }
-  //remove event from end (youwon)
-  end.removeEventListener("mouseover",wonFunction,false);
+  for(i=0;i<5;i++){
+    divs[i].removeEventListener("mouseover",looseMouseOver);
+    }
+  //remove event from end (after winning)
+  end.removeEventListener("mouseover",wonFunction);
   
   document.getElementById("status").innerText = "You Lost";
     
@@ -38,17 +44,20 @@ function looseMouseOver() {
       } else {
         score -= 10; //if score 10 or more then substract from it 10 points
       }
-    start.addEventListener("click", game);
+    start.addEventListener("click", startGame);
+    gameBoundaries.removeEventListener("mouseleave",cheatingDetected);
   }
 
 function wonFunction(){
     document.getElementById("status").innerText = "You Won";
     //remove loose event
     for(i=0;i<5;i++){
-    divs[i].removeEventListener("mouseover",looseMouseOver,false);
+    divs[i].removeEventListener("mouseover",looseMouseOver);
     }
+    end.removeEventListener("mouseover", wonFunction);
     score += 5;
-    start.addEventListener("click", game);
+    start.addEventListener("click", startGame);
+    gameBoundaries.removeEventListener("mouseleave",cheatingDetected);
 }
 
 // restart the game
@@ -63,10 +72,17 @@ function restartGame(){
   }
   
   for(i=0;i<5;i++){
-    divs[i].removeEventListener("mouseover",looseMouseOver,false);
+    divs[i].removeEventListener("mouseover",looseMouseOver);
     }
 
   document.getElementById("status").innerText = "Begin by moving your mouse over the \"S\" . ";
+  end.removeEventListener("mouseover", wonFunction);
 }
 
+function cheatingDetected()
+{
+  alert("You Cheated!");
+  gameBoundaries.removeEventListener("mouseleave",cheatingDetected);
+  restartGame();
+}
 }
