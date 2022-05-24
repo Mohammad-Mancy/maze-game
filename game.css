@@ -110,3 +110,33 @@ neighboring elements.  Necessary to avoid giving ids to the boundary divs
 	height: 150px;
 	width: 98px;
 }
+.timer-div	{
+	padding-top: 20px;
+	height: 50px;
+	display:flex;
+	text-align: center;
+}
+.live{
+	flex:1;
+	font-size: 18px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+.last{
+	flex:1;
+	font-size: 18px;
+	display: flex;
+	flex-direction: column;
+
+}
+.best{
+	flex:1;
+	font-size: 18px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+.timer{
+	font-size: 18px;
+} 

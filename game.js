@@ -8,22 +8,32 @@ var start = document.getElementById("start");
 var end = document.getElementById("end");
 var gameBoundaries = document.getElementById("game");
 var restart;
-
+var liveRound =document.getElementById("live-round");
+var lastRound =document.getElementById("last-round");
+var bestRound=document.getElementById("best-round");
+timerLive=0;
+timerLast=0;
+timerBest=0;
+var startingTime=0;
+var endingTime=0;
+min=100;
+liveRound.innerText = "0.0";
+lastRound.innerText = "0.0";
+bestRound.innerText = "0.0";
 
 start.addEventListener("click", startGame);
 
 function startGame() {
-  for(i=0;i<5;i++){
+  startingTime=Date.now();
+  for(i=0;i<5;i++){     //reset the classes for all div when start again
     divs[i].classList.remove("youlose");;
   }
   document.getElementById("status").innerText = "Your score is \""+ score +"\" ";
-
-  for(i=0;i<5;i++){
+  for(i=0;i<5;i++){ //add event listiner on all the divs
     divs[i].addEventListener("mouseover",looseMouseOver);
   }
-
-end.addEventListener("mouseover", wonFunction);
-gameBoundaries.addEventListener("mouseleave",cheatingDetected)
+  end.addEventListener("mouseover", wonFunction);
+  gameBoundaries.addEventListener("mouseleave",cheatingDetected)
 }
 
 function looseMouseOver() {
@@ -49,6 +59,7 @@ function looseMouseOver() {
   }
 
 function wonFunction(){
+    endingTime=Date.now();//take the time when the user reach the end
     document.getElementById("status").innerText = "You Won";
     //remove loose event
     for(i=0;i<5;i++){
@@ -58,6 +69,16 @@ function wonFunction(){
     score += 5;
     start.addEventListener("click", startGame);
     gameBoundaries.removeEventListener("mouseleave",cheatingDetected);
+
+    timerLast=timerLive;
+    timerLive=(endingTime-startingTime)/1000;
+    liveRound.innerText=timerLive;
+    //check the min which is the best score
+    if (min>timerLive){
+        min=timerLive;
+        bestRound.innerText=timerLive;
+    }
+    lastRound.innerText=timerLast;
 }
 
 // restart the game
@@ -66,6 +87,15 @@ restart[0].style.cursor = "pointer";
 restart[0].innerHTML = "---RESTART---";
 restart[0].addEventListener("click",restartGame);
 function restartGame(){
+  //reset the time
+  liveRound.innerText = "0.0";
+  lastRound.innerText = "0.0";
+  bestRound.innerText = "0.0";
+  timerLive=0;
+  timerLast=0;
+  timerBest=0;
+  min=100;
+  //reset the score and the classes added
   score=0;
   for(i=0;i<5;i++){
     divs[i].classList.remove("youlose");;
@@ -85,4 +115,6 @@ function cheatingDetected()
   gameBoundaries.removeEventListener("mouseleave",cheatingDetected);
   restartGame();
 }
+
+
 }
